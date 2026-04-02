@@ -1,0 +1,23 @@
+
+{
+  "manifest_version": 3,
+  "name": "Game Price Tracker Pro+",
+  "version": "2.0.0",
+  "permissions": ["storage", "alarms", "notifications"],
+  "host_permissions": [
+    "https://store.steampowered.com/*",
+    "https://store.epicgames.com/*"
+  ],
+  "background": { "service_worker": "bg.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://store.steampowered.com/app/*"],
+      "js": ["steam.js"]
+    },
+    {
+      "matches": ["https://store.epicgames.com/*/p/*"],
+      "js": ["epic.js"]
+    }
+  ],
+  "action": { "default_popup": "popup.html" }
+}

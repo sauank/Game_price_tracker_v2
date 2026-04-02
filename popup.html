@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{font-family:Arial;padding:10px;width:300px}
+.card{border:1px solid #ccc;padding:8px;margin-bottom:8px;border-radius:6px}
+.low{color:green;font-weight:bold}
+</style>
+</head>
+<body>
+<h3>Deals</h3>
+<div id="list"></div>
+
+<script>
+chrome.storage.sync.get('games',({games={}})=>{
+ const container=document.getElementById('list');
+
+ Object.entries(games).forEach(([key,g])=>{
+   if(!(g.pn===g.lp || (g.tp && g.pn<=g.tp))) return;
+
+   const div=document.createElement('div');
+   div.className='card';
+
+   div.innerHTML=`
+     <strong>${g.t}</strong><br>
+     Price: ${g.p} ${g.pn===g.lp?'🔥':''}<br>
+     Lowest: ${g.lps}<br>
+     <button data-key="${key}">Set Target</button>
+   `;
+
+   div.querySelector('button').onclick=()=>{
+     const val=prompt('Target price');
+     if(val){
+       chrome.storage.sync.get('games',res=>{
+         res.games[key].tp=Number(val);
+         chrome.storage.sync.set({games:res.games});
+       });
+     }
+   };
+
+   container.appendChild(div);
+ });
+});
+</script>
+</body>
+</html>
